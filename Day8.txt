@@ -1,0 +1,241 @@
+mysql> create database stud;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use stud;
+Database changed
+mysql> create table student(studid int,name varchar(20),age int,email varchar(30));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table course(courseid int auto_increment,coursename varchar(20),instructor varchar(30),credits int);
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+mysql> create table course(courseid int auto_increment primary key,coursename varchar(20),instructor varchar(30),credits int);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into students values(1,"Nikhil",19,'nikhil@example.com');
+ERROR 1146 (42S02): Table 'stud.students' doesn't exist
+mysql> insert into student values(1,'Nikhil',19,'nikhil@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values(2,'Eva green',19,'eva.green@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values(3,'Bob smith',21,'bob.smith@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values(4,'David Brown',20,'david.brown@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values(5,'Carol'Lee,20,'carol.lee@example.com');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Lee,20,'carol.lee@example.com')' at line 1
+mysql> insert into student values(5,'Carol Lee',20,'carol.lee@example.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++--------+-------------+------+-------------------------+
+| studid | name        | age  | email                   |
++--------+-------------+------+-------------------------+
+|      1 | Nikhil      |   19 | nikhil@example.com      |
+|      2 | Eva green   |   19 | eva.green@example.com   |
+|      3 | Bob smith   |   21 | bob.smith@example.com   |
+|      4 | David Brown |   20 | david.brown@example.com |
+|      5 | Carol Lee   |   20 | carol.lee@example.com   |
++--------+-------------+------+-------------------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Course (course_name, instructor, credits) VALUES
+    -> ('Mathematics', 'Dr. Patel', 4),
+    -> ('Computer Science', 'Prof. Kumar', 3),
+    -> ('Physics', 'Dr. Sharma', 4),
+    -> ('History', 'Ms. Thomas', 2),
+    -> ('English Literature', 'Mr. Roy', 3);
+ERROR 1054 (42S22): Unknown column 'course_name' in 'field list'
+mysql> desc course
+    -> ;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| courseid   | int         | NO   | PRI | NULL    | auto_increment |
+| coursename | varchar(20) | YES  |     | NULL    |                |
+| instructor | varchar(30) | YES  |     | NULL    |                |
+| credits    | int         | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.02 sec)
+
+mysql> INSERT INTO Course (coursename, instructor, credits) VALUES
+    -> ('Mathematics', 'Dr. Patel', 4),
+    -> ('Computer Science', 'Prof. Kumar', 3),
+    -> ('Physics', 'Dr. Sharma', 4),
+    -> ('History', 'Ms. Thomas', 2),
+    -> ('English Literature', 'Mr. Roy', 3);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> alter table course add fee int;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update course set fee=15000 where coursename='Computer Science';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from course;
++----------+--------------------+-------------+---------+-------+
+| courseid | coursename         | instructor  | credits | fee   |
++----------+--------------------+-------------+---------+-------+
+|        1 | Mathematics        | Dr. Patel   |       4 |  NULL |
+|        2 | Computer Science   | Prof. Kumar |       3 | 15000 |
+|        3 | Physics            | Dr. Sharma  |       4 |  NULL |
+|        4 | History            | Ms. Thomas  |       2 |  NULL |
+|        5 | English Literature | Mr. Roy     |       3 |  NULL |
++----------+--------------------+-------------+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> create database library_db;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use library_db;
+Database changed
+mysql> CREATE TABLE Books (
+    ->     book_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     author VARCHAR(100),
+    ->     genre VARCHAR(50),
+    ->     available_copies INT
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Members (
+    ->     member_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(100),
+    ->     email VARCHAR(100),
+    ->     join_date DATE
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Borrow (
+    ->     borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     member_id INT,
+    ->     book_id INT,
+    ->     borrow_date DATE,
+    ->     return_date DATE,
+    ->     FOREIGN KEY (member_id) REFERENCES Members(member_id),
+    ->     FOREIGN KEY (book_id) REFERENCES Books(book_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Books (title, author, genre, available_copies) VALUES
+    -> ('The Alchemist', 'Paulo Coelho', 'Fiction', 4),
+    -> ('1984', 'George Orwell', 'Dystopian', 3),
+    -> ('Clean Code', 'Robert C. Martin', 'Programming', 2),
+    -> ('Harry Potter', 'J.K. Rowling', 'Fantasy', 5),
+    -> ('Sapiens', 'Yuval Noah Harari', 'History', 3);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Members (name, email, join_date) VALUES
+    -> ('Nikhil Kumar', 'nikhil@example.com', '2024-06-10'),
+    -> ('Aarav Mehta', 'aarav@example.com', '2024-07-05'),
+    -> ('Priya Sharma', 'priya@example.com', '2024-07-15'),
+    -> ('Ravi Verma', 'ravi@example.com', '2024-08-01'),
+    -> ('Sneha Roy', 'sneha@example.com', '2024-08-10');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Borrow (member_id, book_id, borrow_date, return_date) VALUES
+    -> (1, 3, '2024-08-12', '2024-08-22'),
+    -> (2, 1, '2024-08-15', '2024-08-25'),
+    -> (3, 5, '2024-08-18', NULL),
+    -> (4, 2, '2024-08-20', '2024-08-28'),
+    -> (5, 4, '2024-08-21', NULL);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * From Books;
++---------+---------------+-------------------+-------------+------------------+
+| book_id | title         | author            | genre       | available_copies |
++---------+---------------+-------------------+-------------+------------------+
+|       1 | The Alchemist | Paulo Coelho      | Fiction     |                4 |
+|       2 | 1984          | George Orwell     | Dystopian   |                3 |
+|       3 | Clean Code    | Robert C. Martin  | Programming |                2 |
+|       4 | Harry Potter  | J.K. Rowling      | Fantasy     |                5 |
+|       5 | Sapiens       | Yuval Noah Harari | History     |                3 |
++---------+---------------+-------------------+-------------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * From Memebers;
+ERROR 1146 (42S02): Table 'library_db.memebers' doesn't exist
+mysql> SELECT * From Members;
++-----------+--------------+--------------------+------------+
+| member_id | name         | email              | join_date  |
++-----------+--------------+--------------------+------------+
+|         1 | Nikhil Kumar | nikhil@example.com | 2024-06-10 |
+|         2 | Aarav Mehta  | aarav@example.com  | 2024-07-05 |
+|         3 | Priya Sharma | priya@example.com  | 2024-07-15 |
+|         4 | Ravi Verma   | ravi@example.com   | 2024-08-01 |
+|         5 | Sneha Roy    | sneha@example.com  | 2024-08-10 |
++-----------+--------------+--------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * From Borrow;
++-----------+-----------+---------+-------------+-------------+
+| borrow_id | member_id | book_id | borrow_date | return_date |
++-----------+-----------+---------+-------------+-------------+
+|         1 |         1 |       3 | 2024-08-12  | 2024-08-22  |
+|         2 |         2 |       1 | 2024-08-15  | 2024-08-25  |
+|         3 |         3 |       5 | 2024-08-18  | NULL        |
+|         4 |         4 |       2 | 2024-08-20  | 2024-08-28  |
+|         5 |         5 |       4 | 2024-08-21  | NULL        |
++-----------+-----------+---------+-------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> use stud;
+Database changed
+mysql> CREATE TABLE Employee(
+    -> emp_id INT AUTO_INCREMENT PRIMARU key,
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRIMARU key,' at line 2
+mysql> CREATE TABLE Employee (
+    ->     emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     emp_name VARCHAR(100),
+    ->     designation VARCHAR(50),
+    ->     salary DECIMAL(10,2),
+    ->     dept_id INT,
+    ->     FOREIGN KEY (dept_id) REFERENCES Department(dept_id)
+    -> );
+ERROR 1824 (HY000): Failed to open the referenced table 'department'
+mysql> CREATE TABLE Department (
+    ->     dept_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     dept_name VARCHAR(100),
+    ->     location VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Employee (
+    ->     emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     emp_name VARCHAR(100),
+    ->     designation VARCHAR(50),
+    ->     salary DECIMAL(10,2),
+    ->     dept_id INT,
+    ->     FOREIGN KEY (dept_id) REFERENCES Department(dept_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Department (dept_name, location) VALUES
+    -> ('Human Resources', 'Delhi'),
+    -> ('Finance', 'Mumbai'),
+    -> ('IT', 'Bangalore'),
+    -> ('Marketing', 'Chennai'),
+    -> ('Operations', 'Hyderabad');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employee (emp_name, designation, salary, dept_id) VALUES
+    -> ('Amit Sharma', 'HR Manager', 60000.00, 1),
+    -> ('Neha Gupta', 'Accountant', 55000.00, 2),
+    -> ('Rahul Verma', 'Software Engineer', 75000.00, 3),
+    -> ('Priya Singh', 'Marketing Exec', 50000.00, 4),
+    -> ('Ravi Kumar', 'Operations Lead', 65000.00, 5);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> exit
