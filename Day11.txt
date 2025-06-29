@@ -1,0 +1,248 @@
+mysql> use stud;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_stud |
++----------------+
+| course         |
+| department     |
+| employee       |
+| student        |
++----------------+
+4 rows in set (0.01 sec)
+
+mysql> select * from course;
++----------+--------------------+-------------+---------+-------+
+| courseid | coursename         | instructor  | credits | fee   |
++----------+--------------------+-------------+---------+-------+
+|        1 | Mathematics        | Dr. Patel   |       4 | 10000 |
+|        2 | Computer Science   | Prof. Kumar |       3 | 15000 |
+|        3 | Physics            | Dr. Sharma  |       4 | 15000 |
+|        4 | History            | Ms. Thomas  |       2 |  5000 |
+|        5 | English Literature | Mr. Roy     |       3 | 15000 |
++----------+--------------------+-------------+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> sELECT courseid, COUNT(*) AS student_count
+    -> FROM student
+    -> GROUP BY courseid;
+ERROR 1054 (42S22): Unknown column 'courseid' in 'field list'
+mysql> select * from course;
++----------+--------------------+-------------+---------+-------+
+| courseid | coursename         | instructor  | credits | fee   |
++----------+--------------------+-------------+---------+-------+
+|        1 | Mathematics        | Dr. Patel   |       4 | 10000 |
+|        2 | Computer Science   | Prof. Kumar |       3 | 15000 |
+|        3 | Physics            | Dr. Sharma  |       4 | 15000 |
+|        4 | History            | Ms. Thomas  |       2 |  5000 |
+|        5 | English Literature | Mr. Roy     |       3 | 15000 |
++----------+--------------------+-------------+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from student;
++--------+-------------+------+-------------------------+-------+
+| studid | name        | age  | email                   | marks |
++--------+-------------+------+-------------------------+-------+
+|      1 | Nikhil      |   19 | nikhil@example.com      |    85 |
+|      2 | Eva green   |   19 | eva.green@example.com   |    92 |
+|      3 | Bob smith   |   21 | bob.smith@example.com   |    78 |
+|      4 | David Brown |   20 | david.brown@example.com |    88 |
+|      5 | Carol Lee   |   20 | carol.lee@example.com   |    95 |
++--------+-------------+------+-------------------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT c.course_name, COUNT(s.student_id) AS student_count
+    -> FROM students s
+    -> JOIN courses c ON s.course_id = c.course_id
+    -> GROUP BY c.course_name;
+ERROR 1146 (42S02): Table 'stud.students' doesn't exist
+mysql> SELECT c.coursename, COUNT(s.studeid) AS student_count
+    -> FROM student s
+    -> GROUP BY c.coursename;
+ERROR 1054 (42S22): Unknown column 'c.coursename' in 'field list'
+mysql> SELECT c.coursename, COUNT(s.studeid) AS student_count
+    -> FROM students s
+    -> FROM students s;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM students s' at line 3
+mysql> SELECT c.coursename, COUNT(s.studid) AS student_count
+    -> FROM student s
+    -> JOIN courses c ON s.courseid = c.courseid
+    -> GROUP BY c.coursename;
+ERROR 1146 (42S02): Table 'stud.courses' doesn't exist
+mysql> SELECT c.coursename, COUNT(s.studid) AS student_count
+    -> FROM student s
+    -> JOIN courses c ON s.courseid = c.courseid
+    -> GROUP BY c.coursename;
+ERROR 1146 (42S02): Table 'stud.courses' doesn't exist
+mysql> SELECT c.coursename, COUNT(s.studid) AS student_count
+    ->  FROM student s
+    ->  JOIN course c ON s.courseid = c.courseid
+    -> GROUP BY c.coursename;
+ERROR 1054 (42S22): Unknown column 's.courseid' in 'on clause'
+mysql> alter table student add course_id int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from course;
++----------+--------------------+-------------+---------+-------+
+| courseid | coursename         | instructor  | credits | fee   |
++----------+--------------------+-------------+---------+-------+
+|        1 | Mathematics        | Dr. Patel   |       4 | 10000 |
+|        2 | Computer Science   | Prof. Kumar |       3 | 15000 |
+|        3 | Physics            | Dr. Sharma  |       4 | 15000 |
+|        4 | History            | Ms. Thomas  |       2 |  5000 |
+|        5 | English Literature | Mr. Roy     |       3 | 15000 |
++----------+--------------------+-------------+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc student;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| studid    | int         | YES  |     | NULL    |       |
+| name      | varchar(20) | YES  |     | NULL    |       |
+| age       | int         | YES  |     | NULL    |       |
+| email     | varchar(30) | YES  |     | NULL    |       |
+| marks     | int         | YES  |     | NULL    |       |
+| course_id | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT course_id, COUNT(*) AS student_count
+    -> FROM students
+    -> GROUP BY course_id;
+ERROR 1146 (42S02): Table 'stud.students' doesn't exist
+mysql> SELECT course_id, COUNT(*) AS student_count
+    -> FROM student
+    -> GROUP BY courseid;
+ERROR 1054 (42S22): Unknown column 'courseid' in 'group statement'
+mysql> SELECT course_id, COUNT(*) AS student_count
+    -> FROM student
+    -> GROUP BY course_id;
++-----------+---------------+
+| course_id | student_count |
++-----------+---------------+
+|      NULL |             5 |
++-----------+---------------+
+1 row in set (0.00 sec)
+
+mysql> use library_db;
+Database changed
+mysql> SELECT department, AVG(salary) AS average_salary
+    -> FROM employees
+    -> GROUP BY department;
+ERROR 1146 (42S02): Table 'library_db.employees' doesn't exist
+mysql> select * from emplouee;
+ERROR 1146 (42S02): Table 'library_db.emplouee' doesn't exist
+mysql> select * from employee;
+ERROR 1146 (42S02): Table 'library_db.employee' doesn't exist
+mysql> show tables;
++----------------------+
+| Tables_in_library_db |
++----------------------+
+| books                |
+| borrow               |
+| members              |
++----------------------+
+3 rows in set (0.00 sec)
+
+mysql> use stud;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_stud |
++----------------+
+| course         |
+| department     |
+| employee       |
+| student        |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department, AVG(salary) AS average_salary
+    -> FROM employee
+    -> GROUP BY department;
+ERROR 1054 (42S22): Unknown column 'department' in 'field list'
+mysql> select * from employee;
++--------+-------------+-------------------+----------+---------+
+| emp_id | emp_name    | designation       | salary   | dept_id |
++--------+-------------+-------------------+----------+---------+
+|      1 | Amit Sharma | HR Manager        | 60000.00 |       1 |
+|      2 | Neha Gupta  | Accountant        | 55000.00 |       2 |
+|      3 | Rahul Verma | Software Engineer | 75000.00 |       3 |
+|      4 | Priya Singh | Marketing Exec    | 50000.00 |       4 |
+|      5 | Ravi Kumar  | Operations Lead   | 65000.00 |       5 |
++--------+-------------+-------------------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT dept_id, AVG(salary) AS average_salary
+    -> FROM employee
+    -> GROUP BY dept_id;
++---------+----------------+
+| dept_id | average_salary |
++---------+----------------+
+|       1 |   60000.000000 |
+|       2 |   55000.000000 |
+|       3 |   75000.000000 |
+|       4 |   50000.000000 |
+|       5 |   65000.000000 |
++---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT MAX(price) AS max_price, MIN(price) AS min_price
+    -> FROM products;
+ERROR 1146 (42S02): Table 'stud.products' doesn't exist
+mysql> SELECT MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM department;
+ERROR 1054 (42S22): Unknown column 'salary' in 'field list'
+mysql> SELECT MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employee;
++------------+------------+
+| max_salary | min_salary |
++------------+------------+
+|   75000.00 |   50000.00 |
++------------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT product_id SUM(salary) AS monthly_sal
+    -> from employee
+    -> grop by dept_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SUM(salary) AS monthly_sal
+from employee
+grop by dept_id' at line 1
+mysql> SELECT department, COUNT(*) AS total_employees, AVG(salary) AS avg_salary,
+    ->        MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employees
+    -> GROUP BY department;
+ERROR 1146 (42S02): Table 'stud.employees' doesn't exist
+mysql> SELECT department, COUNT(*) AS total_employees, AVG(salary) AS avg_salary,
+    ->        MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employee
+    -> GROUP BY department;
+ERROR 1054 (42S22): Unknown column 'department' in 'field list'
+mysql> SELECT department, COUNT(*) AS total_employees, AVG(salary) AS avg_salary,
+    ->        MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employees
+    -> grop by dept_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by dept_id' at line 4
+mysql> SELECT department, COUNT(*) AS total_employees, AVG(salary) AS avg_salary,
+    ->        MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employee
+    -> group by dept_id;
+ERROR 1054 (42S22): Unknown column 'department' in 'field list'
+mysql> SELECT dept_id, COUNT(*) AS total_employees, AVG(salary) AS avg_salary,
+    ->        MAX(salary) AS max_salary, MIN(salary) AS min_salary
+    -> FROM employee
+    -> group by dept_id;
++---------+-----------------+--------------+------------+------------+
+| dept_id | total_employees | avg_salary   | max_salary | min_salary |
++---------+-----------------+--------------+------------+------------+
+|       1 |               1 | 60000.000000 |   60000.00 |   60000.00 |
+|       2 |               1 | 55000.000000 |   55000.00 |   55000.00 |
+|       3 |               1 | 75000.000000 |   75000.00 |   75000.00 |
+|       4 |               1 | 50000.000000 |   50000.00 |   50000.00 |
+|       5 |               1 | 65000.000000 |   65000.00 |   65000.00 |
++---------+-----------------+--------------+------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> exit
